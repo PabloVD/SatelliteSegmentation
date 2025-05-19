@@ -1,0 +1,12 @@
+[project]
+name = "segmenttool"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "segment-geospatial>=0.12.6",
+    "jupyterlab",
+    "numpy>=2.2.5",
+    "ipykernel>=6.29.5",
+]

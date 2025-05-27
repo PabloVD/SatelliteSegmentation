@@ -1,34 +1,58 @@
+import sys
 from samgeo import tms_to_geotiff, raster_to_vector
 from samgeo.text_sam import LangSAM
+import argparse
+import pathlib
 
-class Segmenter():
+def run_langsam(bbox, zoom, threshold=0.24):
 
-    def __init__(self,
-                 bbox: list[float],
-                 zoom: int,
-                 text_prompt: str,
-                 image = "satellite.tif"):
-        
-        self.image = image
-        
-        tms_to_geotiff(output=image, bbox=bbox, zoom=zoom, source="Satellite", overwrite=True)
+    outpath = pathlib.Path("outputs")
+    outpath.mkdir(parents=True, exist_ok=True)
 
-        self.sam = LangSAM()
+    text_prompt = "tree"
 
-    def predict(self, text_prompt):
+    image_path = str(outpath / "satellite.tif")
+    masktif_path = str(outpath / "masks.tif")
+    maskgeojson_path = str(outpath / "masks.geojson")
 
-        self.sam.predict(self.image, text_prompt, box_threshold=0.24, text_threshold=0.24)
-        raster_to_vector("masks.tif", "masks.geojson")
+    tms_to_geotiff(output=image_path, bbox=bbox, zoom=zoom, source="Satellite", overwrite=True)
 
+    sam = LangSAM()
 
-if __name__=="__main__":
+    sam.predict(image_path, text_prompt, output=masktif_path, box_threshold=threshold, text_threshold=threshold)
+    raster_to_vector(masktif_path, maskgeojson_path)
+
+def main():
+
+    print(sys.version)
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--lon_min')
+    parser.add_argument('--lat_min')
+    parser.add_argument('--lon_max')
+    parser.add_argument('--lat_max')
+    args = parser.parse_args()
+
+    lon_min, lat_min, lon_max, lat_max = args.lon_min, args.lat_min, args.lon_max, args.lat_max
+    
+    print("Args:", args)
+    print("Coords:", lon_min, lat_min, lon_max, lat_max)
+    print("Received sys.argv:", sys.argv)
 
     lat_min = 41.383
     lon_min = 2.155
     lat_max = 41.387
     lon_max = 2.165
-    zoom = 18
-    bbox = [lon_min, lat_min, lon_max, lat_max]
-    text_prompt = "tree"
 
-    segmenter = Segmenter(bbox, zoom, text_prompt)
+    zoom = 18
+    threshold = 0.24
+    bbox = [lon_min, lat_min, lon_max, lat_max]
+    bbox = [-0.376748,39.455013,-0.374227,39.457655]
+    
+    run_langsam(bbox, zoom, threshold)
+
+
+if __name__ == '__main__':
+    main()
+
+    

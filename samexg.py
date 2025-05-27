@@ -2,12 +2,32 @@ from sam2.build_sam import build_sam2
 from sam2.sam2_image_predictor import SAM2ImagePredictor
 from PIL import Image
 import numpy as np
-from helpers import show_masks, show_mask
+from helpers import show_masks, show_mask, show_box
 from excess_green import excess_green_segmentation, load_image, mask2geojson
 from shapely.geometry import Point, Polygon
 import geopandas as gpd
 from rasterio.transform import rowcol
 import matplotlib.pyplot as plt
+from scipy import ndimage
+
+def get_bounding_boxes(binary_mask):
+    """
+    Takes a binary mask and returns a list of bounding boxes.
+    Each bounding box is in the format (min_row, min_col, max_row, max_col).
+    """
+    labeled_mask, num_features = ndimage.label(binary_mask)
+    objects = ndimage.find_objects(labeled_mask)
+    
+    bounding_boxes = []
+    for obj_slice in objects:
+        if obj_slice is not None:
+            min_row, max_row = obj_slice[1].start, obj_slice[1].stop
+            min_col, max_col = obj_slice[0].start, obj_slice[0].stop
+            bounding_boxes.append((min_row, min_col, max_row, max_col))
+    
+    bounding_boxes = np.array(bounding_boxes)
+    
+    return bounding_boxes
 
 def excess_green_pipeline(image_path):
 
@@ -15,29 +35,23 @@ def excess_green_pipeline(image_path):
 
     mask_init = excess_green_segmentation(image)
 
+    bboxes = get_bounding_boxes(mask_init)
+
     img = Image.open(image_path)
     plt.figure(figsize=(10, 10),layout="tight")
     plt.imshow(img)
     show_mask(mask_init, plt.gca(),borders=False)
+    # for box in bboxes:
+    #     show_box(box, plt.gca())
     plt.axis('off')
     plt.title("Excess green")
     plt.show()
-
-    mask2geojson(mask_init, transform, crs)
-
-    gdf = gpd.read_file("vegetation.geojson")
-
-    centroids = [ [poly.centroid.x, poly.centroid.y] for poly in gdf.geometry ]
-
-    pixel_points = [rowcol(transform, x, y) for x, y in centroids]
-
-    point_coords = np.array(pixel_points)
-
-    return point_coords
+    
+    return bboxes
 
 device = "cuda"
 
-image_path = 'samgeo_tests/satellite.tif'
+image_path = 'samgeo_tests/satellite_sanvicent.tif'
 
 image = Image.open(image_path)
 # image.show()
@@ -55,21 +69,31 @@ predictor = SAM2ImagePredictor(sam2_model)
 
 predictor.set_image(image)
 
-point_coords = excess_green_pipeline(image_path)
-
-# Convert to SAM input format
-point_labels = np.ones(len(point_coords), dtype=int)
+bboxes = point_coords = excess_green_pipeline(image_path)
 
 masks, scores, logits = predictor.predict(
-    point_coords=point_coords,
-    point_labels=point_labels,
-    multimask_output=True,
+    point_coords=None,
+    point_labels=None,
+    box=bboxes,
+    multimask_output=False,
 )
+
+masks = masks.sum(axis=0)
+
 sorted_ind = np.argsort(scores)[::-1]
 masks = masks[sorted_ind]
 scores = scores[sorted_ind]
 logits = logits[sorted_ind]
 
-show_masks(image, masks, scores, point_coords=point_coords, input_labels=point_labels, borders=True)
+point_coords = None
+point_labels = None
 
-# try with predict_batch
+img = Image.open(image_path)
+plt.figure(figsize=(10, 10),layout="tight")
+plt.imshow(img)
+show_mask(masks[0], plt.gca(),borders=False)
+# for box in bboxes:
+#     show_box(box, plt.gca())
+plt.axis('off')
+plt.title("Excess green + Sam2")
+plt.show()

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from helpers import show_mask
 from PIL import Image
+from scipy import ndimage
 
 def load_image(image_path: str):
 
@@ -17,15 +18,19 @@ def load_image(image_path: str):
 
     return image, transform, crs
 
-def excess_green_segmentation(image, threshold: int = 20):
+def excess_green_segmentation(image, threshold: int = 20, morph_kernel_size: int = 5):
 
     r = image[0].astype(float)
     g = image[1].astype(float)
     b = image[2].astype(float)
     exg = 2 * g - r - b
-    vegetation_mask = exg > threshold  # Adjust threshold empirically
+    vegetation_mask = exg > threshold
 
-    return vegetation_mask
+    # Apply opening (erosion followed by dilation) to smooth mask boundaries
+    structure = np.ones((morph_kernel_size, morph_kernel_size), dtype=bool)
+    cleaned_mask = ndimage.binary_opening(vegetation_mask, structure=structure)
+
+    return cleaned_mask
 
 def mask2geojson(mask, transform, crs, file_name="vegetation.geojson"):
 
@@ -52,7 +57,7 @@ def mask2geojson(mask, transform, crs, file_name="vegetation.geojson"):
 
 if __name__=="__main__":
 
-    image_path = "samgeo_tests/satellite.tif"
+    image_path = "samgeo_tests/satellite_sanvicent.tif"
     #image_path = "satellite.tif"
 
     image, transform, crs = load_image(image_path)

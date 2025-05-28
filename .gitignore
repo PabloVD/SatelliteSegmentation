@@ -3,3 +3,5 @@ samgeo_tests/
 *.egg-info/
 old/
 outputs/
+*geojson
+*tif

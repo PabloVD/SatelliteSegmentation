@@ -1,8 +1,4 @@
-from scipy import ndimage
-import numpy as np
-from PIL import Image
 from samgeo.text_sam import LangSAM
-
 
 from Segmenter import Segmenter
 

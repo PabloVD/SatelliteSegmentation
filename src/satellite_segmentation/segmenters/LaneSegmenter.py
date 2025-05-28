@@ -18,7 +18,7 @@ class LaneSegmenter(Segmenter):
 
         if self.use_mask_init:
             mask = self.langsam.predict()
-            image = cv2.bitwise_and(gray, gray, mask=mask)
+            image = cv2.bitwise_and(self.image, self.image, mask=mask)
         else:
             image = self.image
 

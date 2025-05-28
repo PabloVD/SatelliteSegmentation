@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+from excess_green import mask2geojson, load_image
 
 image_path = 'samgeo_tests/satellite.tif'
 # image_path = 'samgeo_tests/satellite_sanchisguarner.tif'
@@ -39,6 +40,11 @@ for cnt in contours:
     length = cv2.arcLength(cnt, closed=False)
     if length > 20:  # Keep long segments only
         cv2.drawContours(lane_mask, [cnt], -1, 255, thickness=1)
+
+lane_mask = (lane_mask > 0).astype("uint8")
+
+_, transform, crs = load_image(image_path)
+mask2geojson(lane_mask, transform, crs, file_name="roads_sanvicent.geojson")
 
 # --- 6. Show results ---
 plt.figure(figsize=(12, 6))

@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
-from satellite_segmentation.helpers import show_mask
 from PIL import Image
-from satellite_segmentation.LaneSegmenter import LaneSegmenter
+
+from satellite_segmentation.helpers import show_mask
+from satellite_segmentation.segmenters import LaneSegmenter
 
 if __name__=="__main__":
 

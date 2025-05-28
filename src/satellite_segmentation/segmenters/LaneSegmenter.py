@@ -1,20 +1,29 @@
 
 import cv2
 
-from satellite_segmentation.Segmenter import Segmenter
+from .Segmenter import Segmenter
+from .LangSamSegmenter import LangSamSegmenter
 
 class LaneSegmenter(Segmenter):
 
-    def __init__(self, image_path: str):
+    def __init__(self, image_path: str, use_mask_init: bool = True):
         
         super().__init__(image_path)
 
         self.image = cv2.imread(image_path)
+        self.use_mask_init = use_mask_init
+        self.langsam = LangSamSegmenter(image_path, text_prompt="road")
 
     def predict(self):
 
-        gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
-        hsv = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
+        if self.use_mask_init:
+            mask = self.langsam.predict()
+            image = cv2.bitwise_and(gray, gray, mask=mask)
+        else:
+            image = self.image
+
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         # White mask: high V, low S
         white_mask = cv2.inRange(hsv, (0, 0, 180), (180, 40, 255))
@@ -33,15 +42,6 @@ class LaneSegmenter(Segmenter):
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
         dilated = cv2.dilate(edges, kernel, iterations=1)
         cleaned = cv2.erode(dilated, kernel, iterations=1)
-
-        # # Filter short segments using contour area and get thin lines
-        # contours, _ = cv2.findContours(cleaned, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        # lane_mask = np.zeros_like(gray)
-
-        # for cnt in contours:
-        #     length = cv2.arcLength(cnt, closed=False)
-        #     if length > 20:  # Keep long segments only
-        #         cv2.drawContours(lane_mask, [cnt], -1, 255, thickness=1)
 
         lane_mask = (cleaned > 0).astype("uint8")
         self.mask = lane_mask

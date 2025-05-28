@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
-from satellite_segmentation.helpers import show_mask
 from PIL import Image
-from satellite_segmentation.LangSamSegmenter import LangSamSegmenter
+
+from satellite_segmentation.helpers import show_mask
+from satellite_segmentation.segmenters import LangSamSegmenter
 
 if __name__=="__main__":
 

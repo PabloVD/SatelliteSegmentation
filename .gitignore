@@ -1,3 +1,5 @@
 *__pycache__/*
 samgeo_tests/
 *.egg-info/
+old/
+outputs/

@@ -1,6 +1,6 @@
 from samgeo.text_sam import LangSAM
 
-from Segmenter import Segmenter
+from satellite_segmentation.Segmenter import Segmenter
 
 class LangSamSegmenter(Segmenter):
 

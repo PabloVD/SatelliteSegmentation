@@ -4,7 +4,7 @@ from PIL import Image
 from sam2.build_sam import build_sam2
 from sam2.sam2_image_predictor import SAM2ImagePredictor
 
-from Segmenter import Segmenter
+from satellite_segmentation.Segmenter import Segmenter
 from ExcessGreenSegmenter import ExcessGreenSegmenter
 
 class SamEGSegmenter(Segmenter):

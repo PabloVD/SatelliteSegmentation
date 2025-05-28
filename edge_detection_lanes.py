@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 image_path = 'samgeo_tests/satellite.tif'
 # image_path = 'samgeo_tests/satellite_sanchisguarner.tif'
-image_path = 'samgeo_tests/satellite_sanvicent.tif'
+image_path = '../samgeo_tests/satellite_sanvicent.tif'
 
 image = cv2.imread(image_path)
 

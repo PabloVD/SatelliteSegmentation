@@ -20,3 +20,9 @@ ipython kernel install --user --name=segmenter
 ```sh
 conda install -c conda-forge localtileserver
 ```
+
+Then
+
+```sh
+pip install -e .
+```

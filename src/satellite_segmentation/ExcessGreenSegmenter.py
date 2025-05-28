@@ -1,7 +1,7 @@
 from scipy import ndimage
 import numpy as np
 
-from Segmenter import Segmenter
+from satellite_segmentation.Segmenter import Segmenter
 
 class ExcessGreenSegmenter(Segmenter):
 

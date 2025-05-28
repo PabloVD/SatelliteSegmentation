@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
-from helpers import show_mask
+from satellite_segmentation.helpers import show_mask
 from PIL import Image
-from LangSamSegmenter import LangSamSegmenter
+from satellite_segmentation.LangSamSegmenter import LangSamSegmenter
 
 if __name__=="__main__":
 
-    image_path = "samgeo_tests/satellite_sanvicent.tif"
+    image_path = "../samgeo_tests/satellite_sanvicent.tif"
     segmenter = LangSamSegmenter(image_path, text_prompt="tree")
     mask = segmenter.predict()
     segmenter.mask2geojson("langsam_trees_sanvicent.geojson")

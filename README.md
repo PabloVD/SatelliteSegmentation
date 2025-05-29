@@ -1,3 +1,13 @@
+# SatelliteSegmentation
+
+Tools for segmenting different elements such as trees and lane markers from satellite images.
+
+It makes use of several open source libraries such as [sam2](https://github.com/facebookresearch/sam2/tree/main) and [samgeo](https://samgeo.gishub.org/).
+
+## Prerequisites
+
+[samgeo](https://samgeo.gishub.org/) makes use of [GDAL](https://gdal.org/en/stable/) for efficiently handling satellite images.
+
 Install [GDAL](https://gdal.org/en/stable/)
 
 ```sh
@@ -8,21 +18,21 @@ Install [GDAL](https://gdal.org/en/stable/)
 pip install --no-build-isolation --no-cache-dir --force-reinstall gdal 
 ```
 
+If using conda:
+
 ```sh
 conda install -c conda-forge gdal
-```
-
-Add venv kernel:
-```sh
-ipython kernel install --user --name=segmenter
 ```
 
 ```sh
 conda install -c conda-forge localtileserver
 ```
 
-Then
+## Local installation
+
+To install the library, run:
 
 ```sh
 pip install -e .
 ```
+

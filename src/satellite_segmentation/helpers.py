@@ -1,3 +1,5 @@
+# These helpers functions are adapted from the Sam2 notebooks
+
 import numpy as np
 import matplotlib.pyplot as plt
 

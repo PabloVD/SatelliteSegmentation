@@ -7,7 +7,11 @@ requires-python = ">=3.10"
 dependencies = [
     "segment-geospatial>=0.12.6",
     "sam2",
-    "jupyterlab",
-    "numpy>=2.2.5",
-    "ipykernel>=6.29.5",
+    "numpy",
+    "opencv-python-headless",
+    "geopandas",
+    "rasterio",
+    "scipy",
+    "shapely",
+    "pillow",
 ]

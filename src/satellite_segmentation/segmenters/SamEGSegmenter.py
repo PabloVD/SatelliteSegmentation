@@ -14,7 +14,7 @@ class SamEGSegmenter(Segmenter):
                  threshold: int = 20,
                  morph_kernel_size: int = 5,
                  device = "cuda",
-                 sam2_checkpoint = "/home/tda/CARLA/DigitalTwins/segment_tool/samgeo_tests/sam2.1_hiera_small.pt",
+                 sam2_checkpoint = "checkpoints/sam2.1_hiera_small.pt",
                  sam2_model_cfg = "configs/sam2.1/sam2.1_hiera_s.yaml"
                  ):
         

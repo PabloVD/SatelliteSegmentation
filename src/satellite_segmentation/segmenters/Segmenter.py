@@ -41,6 +41,7 @@ class Segmenter(ABC):
         # Set geometry column and CRS
         gdf = gdf.set_geometry("geometry")
         gdf.set_crs(self.crs, inplace=True)
+        gdf = gdf.to_crs(epsg=4326)
 
         # Save to GeoJSON
         gdf.to_file(file_name, driver="GeoJSON")

@@ -6,7 +6,7 @@ from satellite_segmentation.segmenters import ExcessGreenSegmenter
 
 if __name__=="__main__":
 
-    image_path = "../samgeo_tests/satellite_sanvicent.tif"
+    image_path = "../images/satellite_sanvicent.tif"
     segmenter = ExcessGreenSegmenter(image_path)
     mask = segmenter.predict()
     segmenter.mask2geojson("eg_trees_sanvicent.geojson")

@@ -22,7 +22,7 @@ def tree_segmentation(image_path: str, mode: str):
 
 if __name__=="__main__":
 
-    image_path = "../samgeo_tests/satellite_sanvicent.tif"
+    image_path = "../images/satellite_sanvicent.tif"
 
     mask_eg         = tree_segmentation(image_path, "eg")
     mask_sameg      = tree_segmentation(image_path, "sameg")

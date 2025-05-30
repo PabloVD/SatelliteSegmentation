@@ -1,1 +1,1 @@
-from .segmenters import Segmenter, ExcessGreenSegmenter, LaneSegmenter, LangSamSegmenter, SamEGSegmenter
+from .segmenters import Segmenter, ExcessGreenSegmenter, DetecTreeSegmenter, LaneSegmenter, LangSamSegmenter, SamEGSegmenter

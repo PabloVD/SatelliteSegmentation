@@ -45,3 +45,6 @@ def show_masks(image, masks, scores, point_coords=None, box_coords=None, input_l
         #     plt.title(f"Mask {i+1}, Score: {score:.3f}", fontsize=18)
         plt.axis('off')
         plt.show()
+
+def num_points_geodataframe(gdf):
+    return sum([len(geo.exterior.coords) for geo in gdf["geometry"]])

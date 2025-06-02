@@ -38,14 +38,12 @@ class LaneSegmenter(Segmenter):
         edges = cv2.Canny(masked, threshold1=50, threshold2=150, apertureSize=3)
 
         # Morphological operations to clean up
-        # Dilate to close gaps, then erode to thin
+        # Dilate to close gaps, then erode to thin (closing operation)
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
         dilated = cv2.dilate(edges, kernel, iterations=1)
         cleaned = cv2.erode(dilated, kernel, iterations=1)
 
         lane_mask = (cleaned > 0).astype("uint8")
         self.mask = lane_mask
-
-        print(lane_mask.max())
 
         return lane_mask

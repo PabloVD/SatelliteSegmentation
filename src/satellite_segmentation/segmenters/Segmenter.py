@@ -24,7 +24,7 @@ class Segmenter(ABC):
 
         return image, transform, crs
     
-    def mask2geojson(self, file_name):
+    def mask2geojson(self, file_name: str, simplify: bool = True):
 
         # Extract shapes from mask
         results = (
@@ -46,7 +46,8 @@ class Segmenter(ABC):
         gdf = gdf.to_crs(epsg=4326)
 
         # Simplify exported polylines using the Douglas-Peucker algorithm
-        gdf = self.simplify_polygons(gdf)
+        if simplify:
+            gdf = self.simplify_polygons(gdf)
 
         # Save to GeoJSON
         gdf.to_file(file_name, driver="GeoJSON")

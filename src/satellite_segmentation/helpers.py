@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from samgeo import tms_to_geotiff
 
 def show_mask(mask, ax, random_color=False, borders = True):
     if random_color:
@@ -48,3 +49,36 @@ def show_masks(image, masks, scores, point_coords=None, box_coords=None, input_l
 
 def num_points_geodataframe(gdf):
     return sum([len(geo.exterior.coords) for geo in gdf["geometry"]])
+
+def download_cartovoyager(image_path, bbox):
+    source = "https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png"
+    zoom = 18
+    tms_to_geotiff(output=image_path, bbox=bbox, zoom=zoom, source=source, overwrite=True)
+
+import numpy as np
+
+def sample_n_points_from_mask(mask: np.ndarray, N: int) -> np.ndarray:
+    """
+    Evenly sample N points from a binary mask where nonzero pixels are valid.
+
+    Args:
+        mask (np.ndarray): Binary mask (nonzero = valid region).
+        N (int): Number of points to sample.
+
+    Returns:
+        np.ndarray: Array of shape (N, 2), each row is (row, col) of a sampled point.
+    """
+    # Get all valid (nonzero) coordinates
+    coords = np.column_stack(np.where(mask > 0))
+    total = len(coords)
+    
+    if total == 0:
+        raise ValueError("No valid pixels found in the mask.")
+    if N >= total:
+        # Return all if mask has fewer points than N
+        return coords
+
+    # Even sampling by selecting every (total / N)-th point
+    indices = np.linspace(0, total - 1, N, dtype=int)
+    print(len(indices))
+    return coords[indices]

@@ -4,6 +4,11 @@ Tools for segmenting different elements such as trees and lane markers from sate
 
 It makes use of several open source libraries such as [sam2](https://github.com/facebookresearch/sam2/tree/main) and [samgeo](https://samgeo.gishub.org/).
 
+Currently we support segmentation for
+- Trees
+- Roads
+- Lane markers
+
 ## Prerequisites
 
 [samgeo](https://samgeo.gishub.org/) makes use of [GDAL](https://gdal.org/en/stable/) for efficiently handling satellite images.

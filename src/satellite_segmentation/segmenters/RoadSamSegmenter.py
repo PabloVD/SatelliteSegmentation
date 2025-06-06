@@ -23,6 +23,7 @@ class RoadSamSegmenter(Segmenter):
 
         self.sam2_model = build_sam2(sam2_model_cfg, sam2_checkpoint, device=device)
         self.predictor = SAM2ImagePredictor(self.sam2_model)
+        
         image = Image.open(image_path)
         self.image = np.array(image.convert("RGB"))
         self.predictor.set_image(self.image)

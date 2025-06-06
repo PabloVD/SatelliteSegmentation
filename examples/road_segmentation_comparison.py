@@ -17,7 +17,7 @@ if __name__=="__main__":
     n_modes = len(modes.keys())
 
     img = Image.open(image_path)
-    plt.figure(figsize=(5*n_modes, 10),layout="tight")
+    plt.figure(figsize=(5*n_modes, 5),layout="tight")
 
     for i, mode in enumerate(modes.keys()):
 

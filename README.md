@@ -9,6 +9,20 @@ Currently we support segmentation for
 - Roads
 - Lane markers
 
+## Examples
+
+### Trees segmentation
+
+![alt text](readme_imgs/tree_segmentation_comparison.png)
+
+### Roads segmentation
+
+![alt text](readme_imgs/road_segmentation_comparison.png)
+
+### Lane markers segmentation
+
+![alt text](readme_imgs/lane_markers_segmentation.png)
+
 ## Prerequisites
 
 [samgeo](https://samgeo.gishub.org/) makes use of [GDAL](https://gdal.org/en/stable/) for efficiently handling satellite images.

@@ -1,5 +1,7 @@
-# These helpers functions are adapted from the Sam2 notebooks
+# The mask plotting helpers are adapted from the Sam2 notebooks
 
+import os
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 import rasterio
@@ -33,8 +35,8 @@ def show_box(box, ax):
     w, h = box[2] - box[0], box[3] - box[1]
     ax.add_patch(plt.Rectangle((x0, y0), w, h, edgecolor='green', facecolor=(0, 0, 0, 0), lw=2))    
 
-def show_masks(image, masks, scores, point_coords=None, box_coords=None, input_labels=None, borders=True):
-    for i, (mask, score) in enumerate(zip(masks, scores)):
+def show_masks(image, masks, point_coords=None, box_coords=None, input_labels=None, borders=True):
+    for i, mask in enumerate(masks):
         plt.figure(figsize=(10, 10))
         plt.imshow(image)
         show_mask(mask, plt.gca(), borders=borders)
@@ -44,8 +46,6 @@ def show_masks(image, masks, scores, point_coords=None, box_coords=None, input_l
         if box_coords is not None:
             # boxes
             show_box(box_coords, plt.gca())
-        # if len(scores) > 1:
-        #     plt.title(f"Mask {i+1}, Score: {score:.3f}", fontsize=18)
         plt.axis('off')
         plt.show()
 
@@ -99,3 +99,34 @@ def get_latlon_bounds(tif_path):
         min_lon, min_lat, max_lon, max_lat = bounds_wgs84
         bbox = [min_lon, min_lat, max_lon, max_lat]
         return bbox
+
+def split_grayscale_array_to_tiles(np_array, tile_size=1024, output_dir="tiles"):
+    os.makedirs(output_dir, exist_ok=True)
+
+    if np_array.ndim != 2:
+        raise ValueError("Input array must be 2D (grayscale).")
+
+    height, width = np_array.shape
+    cols = math.ceil(width / tile_size)
+    rows = math.ceil(height / tile_size)
+
+    for row in range(rows):
+        for col in range(cols):
+            top = row * tile_size
+            left = col * tile_size
+            bottom = min(top + tile_size, height)
+            right = min(left + tile_size, width)
+
+            tile_data = np_array[top:bottom, left:right]
+
+            # Pad if necessary
+            if tile_data.shape != (tile_size, tile_size):
+                padded_tile = np.zeros((tile_size, tile_size), dtype=np_array.dtype)
+                padded_tile[:tile_data.shape[0], :tile_data.shape[1]] = tile_data
+                tile_data = padded_tile
+
+            tile_image = Image.fromarray(tile_data, mode='L')
+            tile_image.save(
+                os.path.join(output_dir, f"tile_{row}_{col}.tiff"),
+                compression="none"
+            )

@@ -2,18 +2,16 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 from satellite_segmentation.utils import show_mask
-from satellite_segmentation.segmenters import Segmenter, ExcessGreenSegmenter, LangSamSegmenter, SamEGSegmenter, DetecTreeSegmenter
-
+from satellite_segmentation.segmenters import Segmenter, RoadCartoSegmenter, RoadSamSegmenter, LangSamSegmenter
 
 if __name__=="__main__":
 
-    image_path = "../images/satellite_sanvicent.tif"
+    image_path = "../images/uab_rotonda22.tif"
 
     modes = {
-        "Excess Green":         ExcessGreenSegmenter(image_path),
-        "Excess Green + Sam2":  SamEGSegmenter(image_path, sam2_checkpoint = "../checkpoints/sam2.1_hiera_large.pt"),
-        "LangSam":              LangSamSegmenter(image_path, text_prompt="tree"),
-        "Detectree":            DetecTreeSegmenter(image_path)
+        "Carto Voyager":    RoadCartoSegmenter(image_path),
+        "Carto + Sam2":     RoadSamSegmenter(image_path),
+        "LangSam":          LangSamSegmenter(image_path, text_prompt="road"),
     }
 
     n_modes = len(modes.keys())
@@ -35,5 +33,5 @@ if __name__=="__main__":
         show_mask(mask, plt.gca(),borders=False)
         plt.axis('off')
 
-    plt.savefig("../images/tree_segmentation_comparison.png")
+    plt.savefig("../images/road_segmentation_comparison.png")
     plt.show()

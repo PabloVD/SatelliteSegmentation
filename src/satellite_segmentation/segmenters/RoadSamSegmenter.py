@@ -5,11 +5,11 @@ import numpy as np
 from sam2.build_sam import build_sam2
 from sam2.sam2_image_predictor import SAM2ImagePredictor
 from skimage.morphology import skeletonize
-from satellite_segmentation.helpers import show_masks
+from satellite_segmentation.utils import show_masks
 import matplotlib.pyplot as plt
 
 from .Segmenter import Segmenter
-from ..helpers import sample_n_points_from_mask
+from ..utils import sample_n_points_from_mask
 
 class RoadSamSegmenter(Segmenter):
 

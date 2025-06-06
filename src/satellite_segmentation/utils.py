@@ -2,6 +2,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import rasterio
+from rasterio.warp import transform_bounds
 from samgeo import tms_to_geotiff
 
 def show_mask(mask, ax, random_color=False, borders = True):
@@ -82,3 +84,18 @@ def sample_n_points_from_mask(mask: np.ndarray, N: int) -> np.ndarray:
     indices = np.linspace(0, total - 1, N, dtype=int)
     print(len(indices))
     return coords[indices]
+
+def get_latlon_bounds(tif_path):
+    with rasterio.open(tif_path) as src:
+        bounds = src.bounds  # in native CRS
+        crs = src.crs
+
+        # Transform to WGS84 (EPSG:4326) if needed
+        if crs.to_string() != 'EPSG:4326':
+            bounds_wgs84 = transform_bounds(crs, 'EPSG:4326', *bounds)
+        else:
+            bounds_wgs84 = bounds
+
+        min_lon, min_lat, max_lon, max_lat = bounds_wgs84
+        bbox = [min_lon, min_lat, max_lon, max_lat]
+        return bbox

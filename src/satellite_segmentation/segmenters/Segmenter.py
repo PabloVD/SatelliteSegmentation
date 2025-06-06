@@ -1,11 +1,10 @@
 import rasterio
-import rasterio
+from rasterio.features import shapes
 import geopandas as gpd
 from shapely import simplify
 from shapely.geometry import shape
-from rasterio.features import shapes
 from abc import ABC, abstractmethod
-from ..helpers import num_points_geodataframe
+
 class Segmenter(ABC):
 
     def __init__(self, image_path: str):

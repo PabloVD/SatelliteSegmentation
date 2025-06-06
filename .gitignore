@@ -6,9 +6,6 @@ outputs/
 *geojson
 *tif
 checkpoints/
-examples/*png
-examples/*jpg
-examples/*tif
-examples/*tiff
-examples/*geojson
 examples/tiles/
+images
+geojsons

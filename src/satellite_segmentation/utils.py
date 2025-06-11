@@ -3,6 +3,7 @@
 import os
 import math
 import numpy as np
+from PIL import Image
 import matplotlib.pyplot as plt
 import rasterio
 from rasterio.warp import transform_bounds

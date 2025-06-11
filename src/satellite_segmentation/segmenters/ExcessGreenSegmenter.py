@@ -21,9 +21,10 @@ class ExcessGreenSegmenter(Segmenter):
         exg = 2 * g - r - b
         vegetation_mask = exg > self.threshold
 
-        # Apply opening (erosion followed by dilation) to smooth mask boundaries
+        # Apply opening (erosion followed by dilation) to smooth mask boundaries and closing
         structure = np.ones((self.morph_kernel_size, self.morph_kernel_size), dtype=bool)
         cleaned_mask = ndimage.binary_opening(vegetation_mask, structure=structure)
+        cleaned_mask = ndimage.binary_closing(cleaned_mask, structure=structure)
 
         self.mask = cleaned_mask
 

@@ -23,14 +23,16 @@ Currently we support segmentation for
 
 ![alt text](readme_imgs/lane_markers_segmentation.png)
 
-## Prerequisites
+## Installation
 
-[samgeo](https://samgeo.gishub.org/) makes use of [GDAL](https://gdal.org/en/stable/) for efficiently handling satellite images.
+### Prerequisites
 
-Install [GDAL](https://gdal.org/en/stable/)
+This library makes use of [GDAL](https://gdal.org/en/stable/) for efficiently downloading and handling satellite images.
+
+Install [GDAL](https://gdal.org/en/stable/) and other prerequisites.
 
 ```sh
- sudo apt install libgdal-dev
+ sudo apt install libgdal-dev wheel "setuptools>=67"
  ```
 
 ```sh
@@ -46,12 +48,10 @@ conda install -c conda-forge gdal
 ```sh
 conda install -c conda-forge localtileserver
 ```
-
-## Local installation
+### Local installation
 
 To install the library, run:
 
 ```sh
 pip install -e .
 ```
-

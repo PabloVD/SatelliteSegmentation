@@ -1,7 +1,10 @@
 [project]
 name = "satellite_segmentation"
 version = "0.1.0"
-description = "Add your description here"
+description = "Set of computer vision and deep learning tools for semantic segmentation on aerial images"
+authors = [
+  { name = "Pablo Villanueva-Domingo", email = "pablo.villanueva.domingo@gmail.com" }, 
+]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -15,4 +18,6 @@ dependencies = [
     "shapely",
     "pillow",
     "detectree",
+    "wheel",          # for GDAL
+    "setuptools>=67", # for GDAL
 ]

@@ -1,5 +1,5 @@
 [project]
-name = "satellite_segmentation"
+name = "geoseg"
 version = "0.1.0"
 description = "Set of computer vision and deep learning tools for semantic segmentation on aerial images"
 authors = [

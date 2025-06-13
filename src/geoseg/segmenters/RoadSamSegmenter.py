@@ -5,7 +5,7 @@ import numpy as np
 from sam2.build_sam import build_sam2
 from sam2.sam2_image_predictor import SAM2ImagePredictor
 from skimage.morphology import skeletonize
-from satellite_segmentation.utils import show_masks
+from geoseg.utils import show_masks
 
 from .Segmenter import Segmenter
 from .RoadCartoSegmenter import RoadCartoSegmenter

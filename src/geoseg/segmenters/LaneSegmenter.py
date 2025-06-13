@@ -21,6 +21,10 @@ class LaneSegmenter(Segmenter):
         if self.use_mask_init:
             
             mask_init = self.road_sam.predict()
+            print(mask_init.shape, self.image.shape)
+            w, h = self.image.shape[1], self.image.shape[0]
+            mask_init = cv2.resize(mask_init, (w, h))
+            print(mask_init.shape, self.image.shape)
             image = cv2.bitwise_and(self.image, self.image, mask=mask_init)
 
         else:

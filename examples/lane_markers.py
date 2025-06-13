@@ -2,16 +2,17 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import cv2
 
-from satellite_segmentation.segmenters import LaneSegmenter
+from geoseg.segmenters import LaneSegmenter
 
 if __name__=="__main__":
 
     image_path = "../images/uab_rotonda22.tif"
     segmenter = LaneSegmenter(image_path)
+    segmenter.image = cv2.imread("/home/tda/CARLA/DigitalTwins/Real-ESRGAN/executable/uab_rotonda22_hd.png")
     mask = segmenter.predict()
     # segmenter.mask2geojson("lanes_uab.geojson", simplify=False)
 
-    cv2.imwrite("../images/lanes_uab_22.png", mask*255)
+    cv2.imwrite("../images/lanes_uab_22hd.png", mask*255)
 
     img = Image.open(image_path)
 

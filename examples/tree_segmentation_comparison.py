@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 from PIL import Image
 
-from satellite_segmentation.utils import show_mask
-from satellite_segmentation.segmenters import Segmenter, ExcessGreenSegmenter, LangSamSegmenter, SamEGSegmenter, DetecTreeSegmenter
+from geoseg.utils import show_mask
+from geoseg.segmenters import Segmenter, ExcessGreenSegmenter, LangSamSegmenter, SamEGSegmenter, DetecTreeSegmenter
 
 
 if __name__=="__main__":

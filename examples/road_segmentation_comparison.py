@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 from PIL import Image
 
-from satellite_segmentation.utils import show_mask
-from satellite_segmentation.segmenters import Segmenter, RoadCartoSegmenter, RoadSamSegmenter, LangSamSegmenter
+from geoseg.utils import show_mask
+from geoseg.segmenters import Segmenter, RoadCartoSegmenter, RoadSamSegmenter, LangSamSegmenter
 
 if __name__=="__main__":
 

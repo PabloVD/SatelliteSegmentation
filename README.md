@@ -1,4 +1,4 @@
-# SatelliteSegmentation
+# GeoSeg
 
 Tools for segmenting different elements such as trees and lane markers from satellite images.
 

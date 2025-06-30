@@ -32,8 +32,8 @@ This library makes use of [GDAL](https://gdal.org/en/stable/) for efficiently do
 Install [GDAL](https://gdal.org/en/stable/) and other prerequisites.
 
 ```sh
- sudo apt install libgdal-dev wheel "setuptools>=67"
- ```
+ sudo apt install libgdal-dev
+ ```conda 
 
 ```sh
 pip install --no-build-isolation --no-cache-dir --force-reinstall gdal 

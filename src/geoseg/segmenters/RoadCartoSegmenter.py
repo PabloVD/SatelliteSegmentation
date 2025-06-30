@@ -4,7 +4,7 @@ from PIL import Image
 import numpy as np
 
 from .Segmenter import Segmenter
-from ..utils import download_cartovoyager, get_latlon_bounds
+from ..utils import download_carto, get_latlon_bounds
 
 class RoadCartoSegmenter(Segmenter):
 
@@ -16,17 +16,16 @@ class RoadCartoSegmenter(Segmenter):
 
         bbox = get_latlon_bounds(image_path)
 
-        download_cartovoyager(carto_image_path, bbox=bbox)
+        download_carto(carto_image_path, bbox=bbox)
 
         carto_image = Image.open(carto_image_path)
         self.carto_image = np.array(carto_image)
 
     def predict(self):
 
+        # Roads in Carto Voyager tiles are white and yellow
+        # Apply a filter of these areas
         gray = cv2.cvtColor(self.carto_image, cv2.COLOR_RGB2GRAY)
-
-        # Roads in Carto Voyager tiles are white
-        # Apply a filter of white areas
         _, mask = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY)
 
         # Resize to the original satellite image, since the Carto Voyager tile is low res

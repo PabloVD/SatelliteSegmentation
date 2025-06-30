@@ -6,6 +6,7 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 import rasterio
+import cv2
 from rasterio.warp import transform_bounds
 from samgeo import tms_to_geotiff
 
@@ -53,12 +54,10 @@ def show_masks(image, masks, point_coords=None, box_coords=None, input_labels=No
 def num_points_geodataframe(gdf):
     return sum([len(geo.exterior.coords) for geo in gdf["geometry"]])
 
-def download_cartovoyager(image_path, bbox):
-    source = "https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png"
+def download_carto(image_path, bbox):
+    source = "https://a.basemaps.cartocdn.com/rastertiles/light_nolabels/{z}/{x}/{y}.png"
     zoom = 18
     tms_to_geotiff(output=image_path, bbox=bbox, zoom=zoom, source=source, overwrite=True)
-
-import numpy as np
 
 def sample_n_points_from_mask(mask: np.ndarray, N: int) -> np.ndarray:
     """
@@ -83,7 +82,7 @@ def sample_n_points_from_mask(mask: np.ndarray, N: int) -> np.ndarray:
 
     # Even sampling by selecting every (total / N)-th point
     indices = np.linspace(0, total - 1, N, dtype=int)
-    print(len(indices))
+    
     return coords[indices]
 
 def get_latlon_bounds(tif_path):
@@ -131,3 +130,38 @@ def split_grayscale_array_to_tiles(np_array, tile_size=1024, output_dir="tiles")
                 os.path.join(output_dir, f"tile_{row}_{col}.tiff"),
                 compression="none"
             )
+
+def extract_connected_extension(initial_mask: np.ndarray, refined_mask: np.ndarray) -> np.ndarray:
+    """
+    Keeps only those regions in refined_mask that are connected to initial_mask.
+    
+    Parameters:
+        initial_mask: binary np.ndarray (H x W), trusted topology (0/1 or 0/255)
+        refined_mask: binary np.ndarray (H x W), possibly noisy (0/1 or 0/255)
+        
+    Returns:
+        filtered_mask: binary np.ndarray (H x W), refined + topologically consistent
+    """
+    # Ensure 0/255 for OpenCV floodFill
+    refined_bin = (refined_mask > 0).astype(np.uint8) * 255
+    initial_bin = (initial_mask > 0).astype(np.uint8) * 255
+
+    # Prepare mask for floodFill (needs padding)
+    h, w = refined_bin.shape
+    mask_ff = np.zeros((h + 2, w + 2), np.uint8)
+
+    # Output placeholder
+    connected = np.zeros_like(refined_bin)
+
+    # Run flood fill from every pixel in the initial mask
+    seeds = np.column_stack(np.where(initial_bin == 255))
+    for y, x in seeds:
+        if refined_bin[y, x] == 255 and connected[y, x] == 0:
+            temp = np.zeros_like(refined_bin)
+            temp_mask = mask_ff.copy()
+            cv2.floodFill(refined_bin, temp_mask, (x, y), 128)
+            filled = (refined_bin == 128).astype(np.uint8) * 255
+            connected = cv2.bitwise_or(connected, filled)
+            refined_bin[refined_bin == 128] = 255  # reset for next seed
+
+    return (connected > 0).astype(np.uint8)
